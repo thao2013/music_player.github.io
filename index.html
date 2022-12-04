@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Player</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+<body>
+    <div class="player">
+        <audio src="" id="player__audio"></audio>
+        <div class="dashboard">
+            <span class="dashboard__label ">Now playing:</span>
+            <h1 class="dashboard__namelist">My Favourite Music</h1>
+            <img src="./assets/images/1.png" alt="" class="dashboard__music-img">
+            <div class="dashboard__button">
+                <div class="dashboard__repeat">
+                    <i class="dashboard__repeat-icon fa-solid fa-rotate-right"></i>
+                </div>
+                <div class="dashboard__back">
+                    <i class="dashboard__back-icon fa-solid fa-backward-step"></i>
+                </div>
+                <div class="dashboard__play">
+                    <i class="dashboard__play-icon fa-solid fa-circle-play"></i>
+                    <i class="dashboard__pause-icon fa-solid fa-circle-pause"></i>
+                </div>
+                <div class="dashboard__next">
+                    <i class="dashboard__next-icon fa-solid fa-forward-step"></i>
+                </div>
+                <div class="dashboard__mix">
+                    <i class="dashboard__mix-icon fa-solid fa-shuffle"></i>
+                </div>
+            </div>
+            <input type="range" name="" id="progress" class="dashboard__progess" value="0" step="1" min="0" max="100">
+        </div>
+        <div class="playlist">
+        
+        </div>
+    </div>
+    <script src="./assets/js/main.js"></script>
+</body>
+</html>
