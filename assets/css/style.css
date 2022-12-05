@@ -126,6 +126,10 @@ h1.dashboard__namelist {
     background-color: #ef235d;
 }
 
+.playlist-item:active {
+    opacity: 0.8;
+}
+
 .playlist-item.active .playlist-item__name,
 .playlist-item.active .playlist-item__singer, 
 .playlist-item.active .playlist-item__options{

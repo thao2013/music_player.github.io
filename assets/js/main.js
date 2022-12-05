@@ -7,6 +7,8 @@ const next=$('.dashboard__next');
 const back=$('.dashboard__back');
 const mix=$('.dashboard__mix');
 const repeat=$('.dashboard__repeat');   
+const playlist=$('.playlist');
+const PLAYER_STORAGE_KEY='PLAYER';
 
 const app= 
     {
@@ -14,6 +16,11 @@ const app=
         isPlaying: false,
         isMix: false,
         isRepeat: false,
+        config: JSON.parse(localStorage.getItem(PLAYER_STORAGE_KEY)) || {},
+        setConfig: function(key, value) {
+            this.config[key] = value;
+            localStorage.setItem(PLAYER_STORAGE_KEY, JSON.stringify(this.config));
+        },
         songs:[
             {
                 name: 'Hỗn Thiên',
@@ -57,17 +64,29 @@ const app=
 start();
 
 function start(){
+    // Gán cấu hình từ cofig và ứng dụng
+    loadConfig();
+    // Hiển thị trạng thái ban đầu của Mix và Repeat
+    mix.classList.toggle('dashboard__active', app.isMix);
+    repeat.classList.toggle('dashboard__active', app.isRepeat);
+
+    // Định nghĩa các thuộc tính cho object
     defineProperties();
+
+    // Xử lý các sự kiện
     handleEvents();
+
+    // Cập nhật thông tin bài hát lên UI
     loadCurrentSong();
 
+    // Render playlist
     render();
 }
 
 function render(){
     const htmls=app.songs.map((song, index) => {
         return `
-            <div class="playlist-item ${index === app.currentIndex ? 'active' : ''}">
+            <div data-index='${index}' class="playlist-item ${index === app.currentIndex ? 'active' : ''}">
                 <img src="${song.image}" alt="" class="playlist-item__img">
                 <div class="playlist-item__body">
                     <span class="playlist-item__name">${song.name}</span>
@@ -79,7 +98,7 @@ function render(){
             </div>
         `;
     })
-    $('.playlist').innerHTML=htmls.join('');
+    playlist.innerHTML=htmls.join('');
 }
 
 function handleEvents(){
@@ -153,6 +172,7 @@ function handleEvents(){
         }
         audio.play();
         render();
+        scrollToActiveSong();
     }
 
     // Phát bài phía trước
@@ -165,11 +185,13 @@ function handleEvents(){
         }
         audio.play();
         render();
+        scrollToActiveSong();
     }
 
     // Trộn bài hát
     mix.onclick=function(){
         app.isMix=!app.isMix;
+        app.setConfig('isMix',app.isMix);
         this.classList.toggle('dashboard__active', app.isMix);
     }
     // Next khi hết bài hát
@@ -185,10 +207,26 @@ function handleEvents(){
     // Xử lý repeat
     repeat.onclick=function(){
         app.isRepeat=!app.isRepeat;
+        app.setConfig('isRepeat',app.isRepeat);
         this.classList.toggle('dashboard__active', app.isRepeat);
     }
 
-
+    // Click vào bài hát
+    playlist.onclick=function(e){
+        const nodeSong=e.target.closest('.playlist-item:not(.active)');
+        const nodeOption=e.target.closest('.playlist-item__options');
+        if(nodeSong || nodeOption){
+            if(!nodeOption){
+                app.currentIndex=Number(nodeSong.dataset.index);
+                render();
+                loadCurrentSong();
+                audio.play();
+            }
+            else{
+                console.log('option')
+            }
+        }
+    }
 }
 
 function defineProperties(){
@@ -228,4 +266,17 @@ function mixSong(){
     }while(newCurrent==app.currentIndex)
     app.currentIndex=newCurrent;   
     loadCurrentSong(); 
+}
+
+function scrollToActiveSong(){
+    setTimeout(
+        $('.playlist-item.active').scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+    }),300)
+}
+
+function loadConfig(){
+    app.isMix=app.config.isMix;
+    app.isRepeat=app.config.isRepeat;
 }
